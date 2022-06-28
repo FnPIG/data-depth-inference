@@ -1,6 +1,6 @@
 # Welcome!
 
-This readme will guide you through the use of the code in this repository.
+This readme will guide you to use of the code in this repository.
 
 The code in this repository is for nonparametric prior-free and likelihood-free posterior inference. 
 
@@ -10,27 +10,27 @@ We named this method: **Inference with consonant structures via data peeling**
 As the name suggests, this method construct consonant confidence structures directly from data using a procedure name data peeling. 
 
 ## When to use this code?
-* The probability distribution of the data-generating mechanism, $P_{X}$ is multivariate (d>2)
+* The probability distribution of the data-generating mechanism, $P_{X}$ is multivariate (d>1)
 * The distribution family (e.g. lognormal) of $P_{X}$ is unkown
 * $P_{X}$ is stationary 
 * $X_{i}, i=1,...,n$ are iid samples drown from $P_{X}$
 * For backward propagation, i.e. $P_{X}$ is the distribution of an output quantity and inference is done on the inputs
 * When uncertainty quantification based solely on data is needed: e.g. computing failure probability based on data only 
-* When there is scarcity of data (small sample size), so the inferential (epistemic) uncertainty is predominant
+* When data are scarce (small sample size), so when the inferential (epistemic) uncertainty is predominant
 * The model x=f(y) is not available, but runs of the model can be requested offline
 * When the data has inherent uncertainty, i.e. interval uncertainty
 
-## Why use this code?
+## Why to use this code?
 * It's nonparametric so there is no need to assume a distribution family
 * It's prior-free so no prior knowledge is needed on the parameters to be inferred
 * It's likelihood-free so no stochastic assumption about the error is made
-* It is fully parallel, so only indipendent evaluations of the model are needed
+* It is fully parallel, so only independent evaluations of the model are needed
 * The inferential (epistemic) uncertainty is rigorously quantified
-* The dipendence between the paramters is fully quantified and encoded in the structures
+* The dependence between the parameters is fully quantified and encoded in the structures
 
 ## When **not** to use this code?
 * The sample size of the data set is way larger than its dimension (use parametric inference instead or prior-based inference)
-* $P_{X}$ is highly non-stationary 
+* $P_{X}$ is non-stationary 
 
 
 ## Unanswered questions
@@ -50,14 +50,23 @@ As the name suggests, this method construct consonant confidence structures dire
 
 # References
 
-[1] De Angelis, M., Rocchetta, R., Gray, A., & Ferson, S. (2021). Constructing Consonant Predictive Beliefs from Data with Scenario Theory. Proceedings of Machine Learning Research, 147, 362-362. 
+[1] de Angelis, M., Rocchetta, R., Gray, A., & Ferson, S. (2021). Constructing Consonant Predictive Beliefs from Data with Scenario Theory. Proceedings of Machine Learning Research, 147, 362-362. 
 https://leo.ugr.es/isipta21/pmlr/deangelis21.pdf
 
 [2] https://opensource.org/licenses/MIT
 
 
-
-
+# Cite 
+```bibtex
+@inproceedings{de2021constructing,
+  title={Constructing Consonant Predictive Beliefs from Data with Scenario Theory},
+  author={de Angelis, Marco and Rocchetta, Roberto and Gray, Ander and Ferson, Scott},
+  booktitle={International Symposium on Imprecise Probability: Theories and Applications},
+  pages={357--360},
+  year={2021},
+  organization={PMLR}
+}
+```
 
 # Getting started
 
@@ -81,7 +90,7 @@ from algorithm.examples import (pickle_load,pickle_dump,banana_data,banana_model
 
 # Forward inference problem
 
-The forward inference problem consists in targeting $p_{X}$, and characterising the inferential uncertainty of the quantity $X$ that is being observed.
+The forward inference problem consists in targeting $p_{X}$ and characterising the inferential uncertainty of the quantity $X$ that is being observed.
 
 ## Generating synthetic data
 
@@ -149,9 +158,9 @@ The inference task terminates here.
 
 (1) We can hypothesise a joint probability distribution $\hat{P}_{X}$ and check if it is contained in the consonant structure. 
 
-Then, repeating this procedure we can build a set of compatible distribtions, however there will be no guarantee that these distributions are in the actual credal set. So by doing so we'll lose rigour. 
+Then, repeating this procedure we can build a set of compatible distributions, however there will be no guarantee that these distributions are in the actual credal set. So, by doing so we'll lose rigour. 
 
-(2) We can use an possibility-to-imprecise-probability transform to turn these structures into p-boxes.
+(2) We can use a possibility-to-imprecise-probability transform to turn these structures into p-boxes.
 
 
 
@@ -162,7 +171,7 @@ Then, repeating this procedure we can build a set of compatible distribtions, ho
 
 # Backward (indirect) inference problem
 
-The backward inference problem targets $P_{Y}$, while characterising the inferential uncertainty of the quantity $X$, which is inderectly been observed via $Y=f(X)$.  
+The backward inference problem targets $P_{Y}$, while characterising the inferential uncertainty of the quantity $X$, which is indirectly been observed via $Y=f(X)$.  
 
 In other words, we target $P_{Y}$, while learning $P(X)$, with $Y=f(X)$.
 
@@ -170,7 +179,7 @@ We'll call $f$ a model, for example an engineering model.
 
 ## Generating synthetic data
 
-Again we'll generate `n=100` iid samples from some data generating mechanism $P_{Y}$. Each sample $Y_i$ is a vector with two components: $Y_i \in R^2$, so $d=2$. 
+Again, we'll generate `n=100` iid samples from some data generating mechanism $P_{Y}$. Each sample $Y_i$ is a vector with two components: $Y_i \in R^2$, so $d=2$. 
 
 However, this time we are going to need to know the model $f$ that links the input space $X$ with the output space $Y$. 
 
@@ -218,7 +227,7 @@ Clues may come from the physics of the problem under study.
 x_lo, x_hi = d_*[-10], d_*[10]
 ```
 
-### Step 2: Cover the input space with evenly spaces samples
+### Step 2: Cover the input space with evenly spaced samples
 
 Ideally these samples are generated using a low-discrepancy sampling scheme. 
 
@@ -235,9 +244,9 @@ uy.shape # prints (100000,3)
 
 ### Step 3: Evaluate the model on the coverage samples
 
-This step is the most computationally expensive, and should be done offline and if possible and needed in parallel. 
+This step is the most computationally expensive and should be done offline and if possible and needed in parallel. 
 
-Luckily this evaluation depends only on the bounds (previous step) and need not be repeated if the bounds don't change or the model doesn't change. 
+Luckily this evaluation depends only on the bounds (previous step) and the model, thus need not be repeated if the bounds don't change or the model doesn't change. 
 
 
 ```python
@@ -278,7 +287,7 @@ fy.shape  # prints: (26,2,2)
 
 ### Step 6: Obtain marginal structures (fuzzy numbers) by projecting the coverage samples
 
-This steps builds the marginal fuzzy structures of the inderect observations. 
+This step builds the marginal fuzzy structures of the indirect observations. 
 
 
 
